@@ -34,7 +34,8 @@ def update_task(request,id):
             task.description=description
             task.completed=completed
             task.save()
-            return redirect(reverse("todo:task_list.html"))
+            return redirect(reverse("todo:task_list"))
+    return render(request,'todo/task_form.html',{"task":task})
         
 def delete_task(request,id):
 
@@ -43,4 +44,11 @@ def delete_task(request,id):
         task.delete()
         return redirect(reverse('todo:task_list'))
 
-    return render(request,'todo/delete.html',{'task':task})
+    return render(request,'todo/delete_task.html',{'task':task})
+
+def toggle_task(request,id):
+    task=get_object_or_404(Task,id=id)
+    if request.method=='POST':
+        task.completed = not task.completed
+        task.save()
+    return redirect('todo:task_list')
